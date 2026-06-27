@@ -8,6 +8,8 @@ fun UserDto.toDomain() : User {
         id = id,
         name = name,
         username = username,
-        email = email
+        phone = phone,
+        email = email,
+        website = website
     )
 }

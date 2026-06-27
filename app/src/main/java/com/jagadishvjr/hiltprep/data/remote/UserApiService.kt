@@ -3,8 +3,8 @@ package com.jagadishvjr.hiltprep.data.remote
 import com.jagadishvjr.hiltprep.data.remote.dto.UserDto
 import retrofit2.http.GET
 
-interface ApiService{
+interface UserApiService {
 
-    @GET("users")
-    suspend fun gerUsers(): List<UserDto>
+    @GET("usersvjr")
+    suspend fun getUsers(): List<UserDto>
 }
