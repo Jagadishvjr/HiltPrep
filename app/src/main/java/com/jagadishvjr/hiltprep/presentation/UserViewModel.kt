@@ -1,13 +1,13 @@
 package com.jagadishvjr.hiltprep.presentation
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.jagadishvjr.hiltprep.domain.model.User
 import com.jagadishvjr.hiltprep.domain.usecase.GetUserUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -23,22 +23,22 @@ class UserViewModel @Inject constructor(
     private val useCase: GetUserUseCase
 ): ViewModel(){
 
-    var uiState: UserUiState by mutableStateOf(UserUiState.Loading)
-        private set
+    private val _uiState = MutableStateFlow<UserUiState>(UserUiState.Loading)
+    val uiState: StateFlow<UserUiState> = _uiState.asStateFlow()
 
     init {
         fetchUsers()
     }
 
     fun fetchUsers() {
-        uiState = UserUiState.Loading
+        _uiState.value = UserUiState.Loading
         viewModelScope.launch {
             try {
                 val userData = useCase.invoke()
-                uiState = UserUiState.Success(userData)
+                _uiState.value = UserUiState.Success(userData)
 
             } catch (e: Exception) {
-                uiState = UserUiState.Error(e.message ?: "Something went wrong")
+                _uiState.value = UserUiState.Error(e.message ?: "Something went wrong")
             }
         }
     }

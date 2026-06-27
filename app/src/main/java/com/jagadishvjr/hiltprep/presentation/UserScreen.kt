@@ -5,20 +5,23 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
 
 @Composable
 fun UserScreen(viewModel: UserViewModel = hiltViewModel()) {
+    val state by viewModel.uiState.collectAsState()
 
-    when (val state = viewModel.uiState) {
-
+    when (state) {
         is UserUiState.Loading -> {
             CircularProgressIndicator()
         }
 
         is UserUiState.Success -> {
+            val users = (state as UserUiState.Success).list
             LazyColumn {
-                items(state.list) { user ->
+                items(users) { user ->
                     Text(text = "${user.name} (${user.username})")
                     Text(text = user.email)
                 }
@@ -26,7 +29,7 @@ fun UserScreen(viewModel: UserViewModel = hiltViewModel()) {
         }
 
         is UserUiState.Error -> {
-            Text(text = state.error)
+            Text(text = (state as UserUiState.Error).error)
         }
     }
 }
