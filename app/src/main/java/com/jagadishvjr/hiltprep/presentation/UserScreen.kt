@@ -32,10 +32,17 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import kotlinx.coroutines.launch
 
+
+@Composable
+fun UserRoute(viewModel: UserViewModel = hiltViewModel()) {
+    val state by viewModel.uiState.collectAsState()
+    UserScreen(state = state)
+}
+
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun UserScreen(viewModel: UserViewModel = hiltViewModel()) {
-    val state by viewModel.uiState.collectAsState()
+fun UserScreen(state: UserUiState) {
 
     when (state) {
         is UserUiState.Loading -> {
