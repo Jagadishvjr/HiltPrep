@@ -28,6 +28,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import kotlinx.coroutines.launch
@@ -51,7 +52,9 @@ fun UserScreen(state: UserUiState) {
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                CircularProgressIndicator()
+                CircularProgressIndicator(
+                    modifier = Modifier.testTag("loading_indicator")
+                )
             }
         }
 
@@ -114,7 +117,10 @@ fun UserScreen(state: UserUiState) {
         }
 
         is UserUiState.Error -> {
-            Text(text = (state as UserUiState.Error).error)
+            Text(
+                modifier = Modifier.testTag("error_message"),
+                text = state.error
+            )
         }
     }
 }
