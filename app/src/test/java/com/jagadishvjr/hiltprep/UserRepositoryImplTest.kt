@@ -3,8 +3,10 @@ package com.jagadishvjr.hiltprep
 import com.jagadishvjr.hiltprep.data.remote.UserApiService
 import com.jagadishvjr.hiltprep.data.remote.dto.UserDto
 import com.jagadishvjr.hiltprep.data.repository.UserRepositoryImpl
+import com.jagadishvjr.hiltprep.domain.model.AppResult
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Test
 
 
@@ -32,9 +34,13 @@ class UserRepositoryImplTest {
 
         val result = repository.getUsers()
 
-        assertEquals(1, result.size)
+        assertTrue(result is AppResult.Success)
 
-        assertEquals(result[0].name,"Jagadeesh")
+        val users = (result as AppResult.Success).data
+
+        assertEquals(1, users.size)
+
+        assertEquals(users[0].name,"Jagadeesh")
 
 
     }

@@ -2,6 +2,7 @@ package com.jagadishvjr.hiltprep.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.jagadishvjr.hiltprep.domain.model.AppResult
 import com.jagadishvjr.hiltprep.domain.model.User
 import com.jagadishvjr.hiltprep.domain.usecase.GetUserUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -33,12 +34,13 @@ class UserViewModel @Inject constructor(
     fun fetchUsers() {
         _uiState.value = UserUiState.Loading
         viewModelScope.launch {
-            try {
-                val userData = useCase.invoke()
-                _uiState.value = UserUiState.Success(userData)
-
-            } catch (e: Exception) {
-                _uiState.value = UserUiState.Error(e.message ?: "Something went wrong")
+            when (val result = useCase()) {
+                is AppResult.Success -> {
+                    _uiState.value = UserUiState.Success(result.data)
+                }
+                is AppResult.Error -> {
+                    _uiState.value = UserUiState.Error(result.message)
+                }
             }
         }
     }

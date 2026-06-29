@@ -1,5 +1,6 @@
 package com.jagadishvjr.hiltprep
 
+import com.jagadishvjr.hiltprep.domain.model.AppResult
 import com.jagadishvjr.hiltprep.domain.model.User
 import com.jagadishvjr.hiltprep.domain.repository.UserRepository
 import com.jagadishvjr.hiltprep.domain.usecase.GetUserUseCase
@@ -17,8 +18,9 @@ import org.junit.Rule
 import org.junit.Test
 
 class UserSuccessRepository : UserRepository{
-    override suspend fun getUsers(): List<User> {
-        return listOf(
+    override suspend fun getUsers(): AppResult<List<User>> {
+        return AppResult.Success(
+            listOf(
             User(
                 id = 111,
                 name = "Jagadish",
@@ -27,7 +29,14 @@ class UserSuccessRepository : UserRepository{
                 phone = "9502412221",
                 email = "vjr@gmail.com"
             )
+            )
         )
+    }
+}
+
+class UserErrorRepository : UserRepository{
+    override suspend fun getUsers(): AppResult<List<User>> {
+        return AppResult.Error("Network error")
     }
 }
 
@@ -82,7 +91,7 @@ class UserViewModelTest {
             )
         )
 
-        coEvery { useCase.invoke() } returns fakeUsers
+        coEvery { useCase.invoke() } returns AppResult.Success(fakeUsers)
 
         val vm = UserViewModel(useCase)
 
@@ -98,8 +107,21 @@ class UserViewModelTest {
 
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
+    @Test
+    fun `fetchUsers returns error when use case returns failure`() = runTest {
+        coEvery { useCase.invoke() } returns AppResult.Error("Network error")
+
+        val vm = UserViewModel(useCase)
+
+        advanceUntilIdle()
+
+        val state = vm.uiState.value
+
+        assertTrue(state is UserUiState.Error)
+        assertEquals("Network error", (state as UserUiState.Error).error)
+    }
+
 }
-
-
 
 
