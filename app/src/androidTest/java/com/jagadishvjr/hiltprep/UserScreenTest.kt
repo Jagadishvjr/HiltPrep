@@ -8,6 +8,7 @@ import com.jagadishvjr.hiltprep.domain.model.Address
 import com.jagadishvjr.hiltprep.domain.model.User
 import com.jagadishvjr.hiltprep.presentation.UserScreen
 import com.jagadishvjr.hiltprep.presentation.UserUiState
+import com.jagadishvjr.hiltprep.presentation.WelcomeScreen
 import com.jagadishvjr.hiltprep.ui.theme.HiltPrepTheme
 import org.junit.Rule
 import org.junit.Test
@@ -77,5 +78,17 @@ class UserScreenTest {
         composeTestRule.onNodeWithText("leanne@example.com").assertExists()
         composeTestRule.onNodeWithText("Kulas Light, Apt. 556").assertExists()
         composeTestRule.onNodeWithText("Gwenborough - 92998-3874").assertExists()
+    }
+
+    @Test
+    fun welcomeScreen_showsGetUsersButton() {
+        composeTestRule.setContent {
+            HiltPrepTheme {
+                WelcomeScreen(onGetUsersClick = {})
+            }
+        }
+
+        composeTestRule.onNodeWithTag("get_users_button").assertExists()
+        composeTestRule.onNodeWithText("Get Users").assertExists()
     }
 }
