@@ -32,6 +32,12 @@ class FakeApiService : UserApiService{
     }
 }
 
+class FailingApiService : UserApiService {
+    override suspend fun getUsers(): List<UserDto> {
+        throw IllegalStateException("API failed")
+    }
+}
+
 class UserRepositoryImplTest {
 
     @Test
@@ -51,5 +57,15 @@ class UserRepositoryImplTest {
         assertEquals("Hyderabad", users[0].address.city)
 
 
+    }
+
+    @Test
+    fun `getUsers returns error result when api throws exception`() = runTest {
+        val repository = UserRepositoryImpl(FailingApiService())
+
+        val result = repository.getUsers()
+
+        assertTrue(result is AppResult.Error)
+        assertEquals("API failed", (result as AppResult.Error).message)
     }
 }
