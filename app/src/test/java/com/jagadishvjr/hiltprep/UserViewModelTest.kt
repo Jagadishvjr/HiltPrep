@@ -1,5 +1,6 @@
 package com.jagadishvjr.hiltprep
 
+import com.jagadishvjr.hiltprep.domain.model.Address
 import com.jagadishvjr.hiltprep.domain.model.AppResult
 import com.jagadishvjr.hiltprep.domain.model.User
 import com.jagadishvjr.hiltprep.domain.repository.UserRepository
@@ -26,6 +27,12 @@ class UserSuccessRepository : UserRepository{
                 name = "Jagadish",
                 username = "vjrvjr",
                 website = "www.wipro.com",
+                address = Address(
+                    street = "Road 45",
+                    suite = "Flat 12",
+                    city = "Hyderabad",
+                    zipcode = "500081"
+                ),
                 phone = "9502412221",
                 email = "vjr@gmail.com"
             )
@@ -87,7 +94,18 @@ class UserViewModelTest {
 
         val fakeUsers = listOf(
             User(
-                id = 11, name = "Jag", username = "vjr", email = "vjr@sample.com", website = "www.example.com", phone = "9502412221"
+                id = 11,
+                name = "Jag",
+                username = "vjr",
+                email = "vjr@sample.com",
+                website = "www.example.com",
+                address = Address(
+                    street = "KPHB",
+                    suite = "Block A",
+                    city = "Hyderabad",
+                    zipcode = "500072"
+                ),
+                phone = "9502412221"
             )
         )
 
@@ -123,5 +141,4 @@ class UserViewModelTest {
     }
 
 }
-
 

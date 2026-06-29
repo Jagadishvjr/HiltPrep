@@ -108,6 +108,13 @@ fun UserScreen(state: UserUiState) {
                                 Text(text = "${user.name} (${user.username})")
                                 Spacer(modifier = Modifier.height(8.dp))
                                 Text(text = user.email)
+                                Spacer(modifier = Modifier.height(8.dp))
+                                Text(
+                                    text = "${user.address.street}, ${user.address.suite}"
+                                )
+                                Text(
+                                    text = "${user.address.city} - ${user.address.zipcode}"
+                                )
                             }
                         }
                     }
